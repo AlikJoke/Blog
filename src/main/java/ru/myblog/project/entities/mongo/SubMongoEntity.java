@@ -3,11 +3,30 @@ package ru.myblog.project.entities.mongo;
 import java.io.File;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-public abstract class SubMongoEntity {
+@Document(collection = "attachments")
+public class SubMongoEntity {
 
 	@Id
 	private String id;
+	private Long size;
+	private String attachmentName;
+	public Long getSize() {
+		return size;
+	}
+
+	public void setSize(Long size) {
+		this.size = size;
+	}
+
+	public String getAttachmentName() {
+		return attachmentName;
+	}
+
+	public void setAttachmentName(String attachmentName) {
+		this.attachmentName = attachmentName;
+	}
 
 	private File file;
 	

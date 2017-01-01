@@ -7,12 +7,13 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.GenericGenerator;
 
 public interface SubObject extends Serializable {
 
@@ -35,7 +36,8 @@ public interface SubObject extends Serializable {
 
 		@Override
 		@Id
-		@GeneratedValue(strategy = GenerationType.SEQUENCE)
+		@GeneratedValue(generator = "system-uuid")
+		@GenericGenerator(name = "system-uuid", strategy = "uuid")
 		@Column(name = "id", nullable = false, updatable = false, length = 64)
 		@Access(AccessType.PROPERTY)
 		public String getID() {
@@ -45,7 +47,7 @@ public interface SubObject extends Serializable {
 		public void setID(String id) {
 			this.id = id;
 		}
-		
+
 		@Override
 		public Calendar getModifiedTime() {
 			return modifiedTime;

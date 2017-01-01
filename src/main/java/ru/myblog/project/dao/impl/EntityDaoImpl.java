@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
+import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +29,17 @@ public class EntityDaoImpl implements EntityDao {
 			session = sessionFactory.getCurrentSession();
 		} catch (org.hibernate.HibernateException he) {
 			session = sessionFactory.openSession();
+			session.setFlushMode(FlushMode.ALWAYS);
 		}
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
 	public boolean saveEntity(SubObject obj) {
-		if (Optional.ofNullable(session.save(obj)).isPresent())
+		if (Optional.ofNullable(session.save(obj)).isPresent()) {
+			session.flush();
 			return true;
+		}
 		return false;
 	}
 
@@ -43,19 +47,21 @@ public class EntityDaoImpl implements EntityDao {
 	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
 	public void deleteEntity(SubObject obj) {
 		session.delete(obj);
+		session.flush();
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
 	public void deleteEntity(String id, Class<?> clazz) {
 		session.delete(id, clazz);
-
+		session.flush();
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
 	public void updateEntity(SubObject obj) {
 		session.saveOrUpdate(obj);
+		session.flush();
 	}
 
 	@Override

@@ -1,13 +1,15 @@
 package ru.myblog.project.operations;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
 import ru.myblog.project.dao.EntityDao;
 import ru.myblog.project.entities.SubObject;
 import ru.myblog.project.web.resources.Resource;
 
-@Service
+@Service("restOperationsImpl")
+@Configurable
 public class RestOperationsImpl implements RestOperations {
 
 	@Autowired

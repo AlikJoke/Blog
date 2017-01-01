@@ -2,28 +2,31 @@ package ru.myblog.project.web.references;
 
 import java.net.URI;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.aspectj.EnableSpringConfigured;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import ru.myblog.project.entities.Article;
-import ru.myblog.project.operations.RestOperations;
-import ru.myblog.project.web.resources.ArticleResource;
-import ru.myblog.project.web.resources.Resource;
 import ru.myblog.project.web.utils.UriHelper;
 
+@Service("articleReference")
+@Configurable
+@EnableSpringConfigured
 public class ArticleReference implements Reference {
 
 	public final static String PATH = "/article/{id}";
 	private final String id;
 
-	@Autowired
-	RestOperations restOperations;
-	
 	@Override
 	public String getHref() {
-		UriComponents uriComponents = UriComponentsBuilder.fromPath(PATH).queryParam(this.id).build();
-		return uriComponents.expand(this.id).encode().toString();
+		String id = this.id;
+		if (!StringUtils.hasLength(id))
+			id = "template";
+		UriComponents uriComponents = UriComponentsBuilder.fromPath(PATH).queryParam(id).build();
+		return uriComponents.expand(id).encode().toString();
 	}
 
 	public ArticleReference(URI uri) {
@@ -35,15 +38,7 @@ public class ArticleReference implements Reference {
 		this.id = article.getID();
 	}
 
-	public ArticleResource doGet() {
-		return (ArticleResource) restOperations.get(this.id, Article.class);
-	}
-	
-	public void doPost(Resource resource) {
-		restOperations.create(resource);
-	}
-	
-	public void doPut(Resource resource) {
-		restOperations.update(resource);
+	public ArticleReference() {
+		this.id = null;
 	}
 }

@@ -27,7 +27,7 @@
     	http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
    
-    <context:component-scan base-package="ru.myblog.project"/>
+    <context:component-scan base-package="ru.myblog.project.dao, ru.myblog.project.operations, ru.myblog.project.web, ru.myblog.project.configuration"/>
 
     <context:annotation-config />
     <tx:annotation-driven proxy-target-class="true" />
@@ -72,8 +72,8 @@
 	</mvc:annotation-driven>
 	
 	<bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping" />
-    
-	
+    <bean id="restOperations" class="ru.myblog.project.operations.RestOperationsImpl" />
+    <bean id="entityDao" class="ru.myblog.project.dao.impl.EntityDaoImpl" />
     <bean class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" id="dataSource">
         <property name="driverClassName" value="org.postgresql.Driver"/>
         <property name="url" value="jdbc:postgresql://localhost:5432/blog"/>
