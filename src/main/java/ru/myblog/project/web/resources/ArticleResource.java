@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import ru.myblog.project.entities.Article;

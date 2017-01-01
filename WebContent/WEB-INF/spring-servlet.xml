@@ -66,9 +66,6 @@
 	</bean>
 	
 	<mvc:annotation-driven>
-		<mvc:argument-resolvers>
-				<bean class="org.springframework.security.web.bind.support.AuthenticationPrincipalArgumentResolver" />
-		</mvc:argument-resolvers>
 	</mvc:annotation-driven>
 	
 	<bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping" />

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.springframework.stereotype.Component;
 
 import ru.myblog.project.entities.Attachment;
 import ru.myblog.project.web.references.AttachmentReference;
