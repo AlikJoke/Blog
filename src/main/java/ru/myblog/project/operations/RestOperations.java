@@ -1,5 +1,7 @@
 package ru.myblog.project.operations;
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import ru.myblog.project.web.resources.Resource;
@@ -68,4 +70,6 @@ public interface RestOperations {
 	 * @return REST-ресурс сущности.
 	 */
 	Resource get(@NotNull String id, @NotNull Class<?> clazz);
+	
+	List<Resource> findAll();
 }

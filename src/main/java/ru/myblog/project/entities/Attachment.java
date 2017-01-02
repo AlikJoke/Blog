@@ -7,6 +7,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PostPersist;
+import javax.persistence.PrePersist;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.ForeignKey;
@@ -14,7 +17,13 @@ import org.hibernate.annotations.Index;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Table;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 
+import ru.myblog.project.dao.mongo.EntityMongoDao;
+import ru.myblog.project.dao.mongo.EntityMongoDaoImpl;
+import ru.myblog.project.entities.mongo.SubMongoEntity;
+import ru.myblog.project.entities.utils.AutowiredField;
 import ru.myblog.project.entities.utils.TemplateName;
 
 @Entity
@@ -24,6 +33,17 @@ import ru.myblog.project.entities.utils.TemplateName;
 		@Index(name = "index_attachments_modified_time", columnNames = "modified_time") })
 @TemplateName(name = "attachment")
 public class Attachment extends SubObject.Mapped {
+
+	@Transient
+	private SubMongoEntity file;
+
+	public SubMongoEntity getFile() {
+		return file;
+	}
+
+	public void setFile(SubMongoEntity file) {
+		this.file = file;
+	}
 
 	@Column(name = "size", updatable = false, nullable = false)
 	private Long size;
@@ -72,6 +92,27 @@ public class Attachment extends SubObject.Mapped {
 
 	public void setArticle(Article article) {
 		this.article = article;
+	}
+
+	@PostPersist
+	public void postPersist() throws NoSuchFieldException, SecurityException {
+		if (this.file == null)
+			return;
+		this.file.setId(this.getID());
+
+		mongoDao().saveFile(this.file);
+	}
+
+	private static EntityMongoDao mongoDao() {
+
+		@Configurable
+		@AutowiredField(value = "mongoDao", className = EntityMongoDao.class)
+		class MongoEntityHolder {
+			@Autowired
+			public EntityMongoDao mongoDao;
+		}
+
+		return new MongoEntityHolder().mongoDao == null ? new EntityMongoDaoImpl() : new MongoEntityHolder().mongoDao;
 	}
 
 	public enum AttachmentType {

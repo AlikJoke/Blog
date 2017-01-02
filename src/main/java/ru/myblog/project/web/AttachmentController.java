@@ -26,19 +26,19 @@ public class AttachmentController {
 
 	@RequestMapping(value = AttachmentReference.PATH, method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public @ResponseBody AttachmentResource doGet(@PathVariable("id") String id, Reference ref) {
+	public @ResponseBody AttachmentResource doGet(@PathVariable("id") String id, AttachmentReference ref) {
 		return (AttachmentResource) ref.doGet(restOperations, id);
 	}
 
 	@RequestMapping(value = AttachmentReference.PATH, method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public void doPost(@RequestBody AttachmentResource resource, Reference ref) {
+	public void doPost(@RequestBody AttachmentResource resource, AttachmentReference ref) {
 		ref.doPost(restOperations, resource);
 	}
 
 	@RequestMapping(value = AttachmentReference.PATH, method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.ACCEPTED)
-	public void doPut(@RequestBody AttachmentResource resource, Reference ref) {
+	public void doPut(@RequestBody AttachmentResource resource, AttachmentReference ref) {
 		ref.doPut(restOperations, resource);
 	}
 

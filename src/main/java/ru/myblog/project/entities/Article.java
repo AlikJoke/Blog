@@ -1,11 +1,14 @@
 package ru.myblog.project.entities;
 
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -15,6 +18,7 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Table;
 
+import ru.myblog.project.entities.configuration.Storage;
 import ru.myblog.project.entities.utils.TemplateName;
 
 @Entity
@@ -23,18 +27,21 @@ import ru.myblog.project.entities.utils.TemplateName;
 		@Index(name = "index_articles_id", columnNames = "id"),
 		@Index(name = "index_articles_modified_time", columnNames = "modified_time") })
 @TemplateName(name = "article")
+@NamedQuery(name = "all.articles", query = "SELECT p FROM Article p")
 public class Article extends SubObject.Mapped {
 
 	@Column(name = "text", length = 2048, nullable = true)
 	private String text;
-	
+
 	@OneToMany(targetEntity = Attachment.class, mappedBy = "article")
-	@Cascade({org.hibernate.annotations.CascadeType.ALL})
+	@Cascade({ org.hibernate.annotations.CascadeType.ALL })
 	@NotFound(action = NotFoundAction.IGNORE)
 	private Set<Attachment> attachments;
 
 	public Set<Attachment> getAttachments() {
-		return attachments;
+		if (this.attachments == null)
+			this.attachments = new HashSet<Attachment>();
+		return Storage.unproxy(attachments);
 	}
 
 	public void setAttachments(Set<Attachment> attachments) {
@@ -59,6 +66,11 @@ public class Article extends SubObject.Mapped {
 
 	public void setCreatedTime(Calendar createdTime) {
 		this.createdTime = createdTime;
+	}
+
+	@PrePersist
+	public void prePersist() {
+		this.getAttachments().forEach(attachment -> attachment.setArticle(this));
 	}
 
 }

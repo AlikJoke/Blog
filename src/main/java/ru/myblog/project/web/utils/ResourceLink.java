@@ -10,6 +10,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import ru.myblog.project.web.references.Reference;
 
@@ -48,7 +49,7 @@ public class ResourceLink implements Serializable {
 	}
 
 	public ResourceLink(String rel, String href) {
-		this(rel, href, null);
+		this(rel, ServletConfig.getServerRootUrl() + href, null);
 	}
 
 	public ResourceLink(Reference ref) {

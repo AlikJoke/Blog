@@ -4,14 +4,15 @@ import java.net.URI;
 
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import ru.myblog.project.entities.Attachment;
 import ru.myblog.project.web.utils.UriHelper;
 
-@Service("attachmentReference")
+@Component("attachmentReference")
 @Configurable
 @EnableSpringConfigured
 public class AttachmentReference implements Reference {
@@ -21,8 +22,11 @@ public class AttachmentReference implements Reference {
 	
 	@Override
 	public String getHref() {
-		UriComponents uriComponents = UriComponentsBuilder.fromPath(PATH).queryParam(this.id).build();
-		return uriComponents.expand(this.id).encode().toString();
+		String id = this.id;
+		if (!StringUtils.hasLength(id))
+			id = "template";
+		UriComponents uriComponents = UriComponentsBuilder.fromPath(PATH).build();
+		return uriComponents.expand(id).encode().toString();
 	}
 	
 	public AttachmentReference(URI uri) {

@@ -1,5 +1,7 @@
 package ru.myblog.project.dao;
 
+import java.util.List;
+
 import ru.myblog.project.entities.SubObject;
 
 /**
@@ -68,4 +70,6 @@ public interface EntityDao {
 	 *         сущность не найдена в контексте.
 	 */
 	SubObject.Mapped findEntity(String id, Class<?> clazz);
+	
+	List<? extends SubObject.Mapped> findAllEntities();
 }

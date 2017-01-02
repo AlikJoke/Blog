@@ -1,18 +1,21 @@
 package ru.myblog.project.web.references;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import ru.myblog.project.entities.Article;
+import ru.myblog.project.operations.RestOperations;
+import ru.myblog.project.web.resources.Resource;
 import ru.myblog.project.web.utils.UriHelper;
 
-@Service("articleReference")
+@Component("articleReference")
 @Configurable
 @EnableSpringConfigured
 public class ArticleReference implements Reference {
@@ -25,7 +28,7 @@ public class ArticleReference implements Reference {
 		String id = this.id;
 		if (!StringUtils.hasLength(id))
 			id = "template";
-		UriComponents uriComponents = UriComponentsBuilder.fromPath(PATH).queryParam(id).build();
+		UriComponents uriComponents = UriComponentsBuilder.fromPath(PATH).build();
 		return uriComponents.expand(id).encode().toString();
 	}
 
@@ -40,5 +43,9 @@ public class ArticleReference implements Reference {
 
 	public ArticleReference() {
 		this.id = null;
+	}
+	
+	public List<Resource> getAllArticles(RestOperations restOperations) {
+		return restOperations.findAll();
 	}
 }

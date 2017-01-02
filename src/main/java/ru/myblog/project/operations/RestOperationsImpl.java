@@ -1,11 +1,16 @@
 package ru.myblog.project.operations;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
 import ru.myblog.project.dao.EntityDao;
+import ru.myblog.project.entities.Article;
 import ru.myblog.project.entities.SubObject;
+import ru.myblog.project.web.resources.ArticleResource;
 import ru.myblog.project.web.resources.Resource;
 
 @Service("restOperationsImpl")
@@ -42,6 +47,12 @@ public class RestOperationsImpl implements RestOperations {
 	@Override
 	public Resource get(String id, Class<?> clazz) {
 		return new Resource(entityDao.findEntity(id, clazz));
+	}
+
+	@Override
+	public List<Resource> findAll() {
+		return entityDao.findAllEntities().stream().map(article -> new ArticleResource((Article) article))
+				.collect(Collectors.toList());
 	}
 
 }

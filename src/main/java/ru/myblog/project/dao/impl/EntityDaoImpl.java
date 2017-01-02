@@ -1,73 +1,86 @@
 package ru.myblog.project.dao.impl;
 
-import java.util.Optional;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
-import org.hibernate.FlushMode;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.myblog.project.dao.EntityDao;
+import ru.myblog.project.dao.mongo.EntityMongoDao;
+import ru.myblog.project.entities.Article;
+import ru.myblog.project.entities.Attachment;
 import ru.myblog.project.entities.SubObject;
+import ru.myblog.project.entities.configuration.Storage;
+import ru.myblog.project.entities.mongo.SubMongoEntity;
 
 @Repository
 public class EntityDaoImpl implements EntityDao {
 
 	@Autowired
-	private SessionFactory sessionFactory;
+	private EntityMongoDao mongoDao;
 
-	private Session session;
+	@PersistenceContext(unitName = "persistenceCtx")
+	private EntityManager em;
 
 	@PostConstruct
-	private void init() {
-		try {
-			session = sessionFactory.getCurrentSession();
-		} catch (org.hibernate.HibernateException he) {
-			session = sessionFactory.openSession();
-			session.setFlushMode(FlushMode.ALWAYS);
-		}
+	public void initialize() {
+		Storage.setEntityManager(em);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
 	public boolean saveEntity(SubObject obj) {
-		if (Optional.ofNullable(session.save(obj)).isPresent()) {
-			session.flush();
-			return true;
-		}
-		return false;
+		em.persist(obj);
+		em.flush();
+		return true;
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
 	public void deleteEntity(SubObject obj) {
-		session.delete(obj);
-		session.flush();
+		em.remove(obj);
+		em.flush();
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
 	public void deleteEntity(String id, Class<?> clazz) {
-		session.delete(id, clazz);
-		session.flush();
+		em.remove(Storage.getEntityManager().find(clazz, id));
+		em.flush();
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
 	public void updateEntity(SubObject obj) {
-		session.saveOrUpdate(obj);
-		session.flush();
+		em.refresh(obj);
+		em.flush();
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
+	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
 	public SubObject.Mapped findEntity(String id, Class<?> clazz) {
-		return (SubObject.Mapped) session.get(clazz, id);
+		SubObject.Mapped entity = (SubObject.Mapped) em.find(clazz, id);
+		if (entity instanceof Attachment)
+			((Attachment) entity).setFile(mongoDao.getFile(id, SubMongoEntity.class));
+		else if (entity instanceof Article)
+			((Article) entity).getAttachments().forEach(
+					attachment -> attachment.setFile(mongoDao.getFile(attachment.getID(), SubMongoEntity.class)));
+		return entity;
 	}
-	
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
+	public List<? extends SubObject.Mapped> findAllEntities() {
+		List<Article> articles = em.createNamedQuery("all.articles", Article.class).getResultList();
+		articles.forEach(article -> article.getAttachments()
+				.forEach(attachment -> attachment.setFile(mongoDao.getFile(attachment.getID(), SubMongoEntity.class))));
+		return articles;
+	}
+
 }

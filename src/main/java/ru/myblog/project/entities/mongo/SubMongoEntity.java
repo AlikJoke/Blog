@@ -5,13 +5,26 @@ import java.io.File;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "attachments")
+
+@Document(collection = "files")
 public class SubMongoEntity {
 
 	@Id
 	private String id;
 	private Long size;
-	private String attachmentName;
+	private String fileName;
+
+	public SubMongoEntity() {
+
+	}
+
+	public SubMongoEntity(String id, Long size, String fileName, File file) {
+		this.id = id;
+		this.size = size;
+		this.fileName = fileName;
+		this.file = file;
+	}
+
 	public Long getSize() {
 		return size;
 	}
@@ -20,16 +33,16 @@ public class SubMongoEntity {
 		this.size = size;
 	}
 
-	public String getAttachmentName() {
-		return attachmentName;
+	public String getFileName() {
+		return fileName;
 	}
 
-	public void setAttachmentName(String attachmentName) {
-		this.attachmentName = attachmentName;
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 
 	private File file;
-	
+
 	public File getFile() {
 		return file;
 	}

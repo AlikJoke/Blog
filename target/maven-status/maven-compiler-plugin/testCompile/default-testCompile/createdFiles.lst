@@ -1,3 +1,4 @@
 ru\myblog\project\test\article\ArticleOperationsTest.class
 ru\myblog\project\test\article\ConverterArticleTest.class
 ru\myblog\project\test\attachment\AttachmentOperationsTest.class
+ru\myblog\project\test\mongo\MongoOperationsTest.class
