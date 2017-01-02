@@ -15,6 +15,14 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 
+/**
+ * Интерфейс-маркер верхнего уровня для сущностей из контекста реляционного
+ * хранилища.
+ * 
+ * @author Alimurad A. Ramazanov
+ * @since 31.12.2016
+ * @version 1.0
+ */
 public interface SubObject extends Serializable {
 
 	@NotNull
@@ -26,6 +34,8 @@ public interface SubObject extends Serializable {
 	@MappedSuperclass
 	@Access(AccessType.FIELD)
 	abstract class Mapped implements SubObject {
+
+		private static final long serialVersionUID = -3953253925857797507L;
 
 		@Transient
 		private String id;

@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -13,10 +12,8 @@ import org.apache.http.annotation.ThreadSafe;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -26,8 +23,6 @@ import ru.myblog.project.entities.Attachment;
 import ru.myblog.project.entities.SubObject;
 import ru.myblog.project.entities.mongo.SubMongoEntity;
 import ru.myblog.project.entities.utils.TemplateName;
-import ru.myblog.project.operations.RestOperations;
-import ru.myblog.project.web.references.ArticleReference;
 import ru.myblog.project.web.references.ContentReference;
 import ru.myblog.project.web.utils.ResourceLink;
 
@@ -36,6 +31,8 @@ import ru.myblog.project.web.utils.ResourceLink;
 @JsonSerialize(include = Inclusion.NON_NULL)
 @JsonInclude(Include.NON_DEFAULT)
 public class Resource implements Serializable {
+
+	private static final long serialVersionUID = 8193511648494865658L;
 
 	public String id;
 	public List<ResourceLink> links = new ArrayList<ResourceLink>();

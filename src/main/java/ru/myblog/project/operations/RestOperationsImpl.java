@@ -13,6 +13,14 @@ import ru.myblog.project.entities.SubObject;
 import ru.myblog.project.web.resources.ArticleResource;
 import ru.myblog.project.web.resources.Resource;
 
+/**
+ * Реализация интерфейса {@linkplain RestOperations} для работы с сущностями
+ * REST-слоя.
+ * 
+ * @author Alimurad A. Ramazanov
+ * @since 31.12.2016
+ *
+ */
 @Service("restOperationsImpl")
 @Configurable
 public class RestOperationsImpl implements RestOperations {

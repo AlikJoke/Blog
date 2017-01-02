@@ -30,6 +30,8 @@ import ru.myblog.project.entities.utils.TemplateName;
 @NamedQuery(name = "all.articles", query = "SELECT p FROM Article p")
 public class Article extends SubObject.Mapped {
 
+	private static final long serialVersionUID = 7197843426804952014L;
+
 	@Column(name = "text", length = 2048, nullable = true)
 	private String text;
 

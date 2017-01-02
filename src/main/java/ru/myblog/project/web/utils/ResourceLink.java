@@ -10,14 +10,19 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-import org.springframework.web.context.request.ServletRequestAttributes;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.myblog.project.web.references.Reference;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = Inclusion.NON_NULL)
+@JsonInclude(Include.NON_DEFAULT)
 public class ResourceLink implements Serializable {
 
+	private static final long serialVersionUID = -8366737731655354734L;
+	
 	private final String rel;
 
 	public String getRel() {

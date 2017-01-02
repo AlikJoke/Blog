@@ -8,7 +8,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PostPersist;
-import javax.persistence.PrePersist;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cascade;
@@ -33,6 +32,8 @@ import ru.myblog.project.entities.utils.TemplateName;
 		@Index(name = "index_attachments_modified_time", columnNames = "modified_time") })
 @TemplateName(name = "attachment")
 public class Attachment extends SubObject.Mapped {
+
+	private static final long serialVersionUID = 718963853579497734L;
 
 	@Transient
 	private SubMongoEntity file;
@@ -115,11 +116,23 @@ public class Attachment extends SubObject.Mapped {
 		return new MongoEntityHolder().mongoDao == null ? new EntityMongoDaoImpl() : new MongoEntityHolder().mongoDao;
 	}
 
+	/**
+	 * Перечисление типов вложений (приложений).
+	 * {@linkplain AttachmentType#MUSIC} - файл расширения .mp3, .mpeg, .mp4.
+	 * {@linkplain AttachmentType#VIDEO} - видео-файлы.
+	 * {@linkplain AttachmentType#PICTURE} - файл-картинка (.jpg, .jpeg, .png).
+	 * {@linkplain AttachmentType#DOCUMENT} - файл-документ.
+	 * 
+	 * @author Alimurad A. Ramazanov
+	 * @since 01.01.2017
+	 */
 	public enum AttachmentType {
 
 		MUSIC,
 
 		VIDEO,
+
+		DOCUMENT,
 
 		PICTURE;
 	}

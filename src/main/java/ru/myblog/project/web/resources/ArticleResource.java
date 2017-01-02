@@ -1,6 +1,5 @@
 package ru.myblog.project.web.resources;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +24,8 @@ import ru.myblog.project.web.utils.ResourceLink;
 @JsonInclude(Include.NON_DEFAULT)
 public class ArticleResource extends Resource {
 
+	private static final long serialVersionUID = -3922661241182261413L;
+	
 	public String text;
 	public Date createdDate;
 	public List<AttachmentResource> attachments;

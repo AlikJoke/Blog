@@ -15,6 +15,12 @@ import com.mongodb.DBCollection;
 import ru.myblog.project.configuration.mongo.MongoDBConfig;
 import ru.myblog.project.entities.mongo.SubMongoEntity;
 
+/**
+ * Реализация интерфейса {@link EntityMongoDao}
+ * 
+ * @author Alimurad A. Ramazanov
+ * @since 31.12.2016
+ */
 @Repository
 public class EntityMongoDaoImpl implements EntityMongoDao {
 

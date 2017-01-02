@@ -23,6 +23,8 @@ import ru.myblog.project.web.utils.UriHelper;
 @EnableSpringConfigured
 public class ContentReference implements Reference {
 
+	private static final long serialVersionUID = -3223123930634182188L;
+
 	public final static String PATH = "/content/{hash}";
 	private final String hash;
 
@@ -93,6 +95,9 @@ public class ContentReference implements Reference {
 	}
 
 	public class UploadedFileResource implements Serializable {
+
+		private static final long serialVersionUID = 5349193220369036636L;
+
 		private String hash;
 
 		public UploadedFileResource() {

@@ -20,6 +20,8 @@ import ru.myblog.project.web.utils.UriHelper;
 @EnableSpringConfigured
 public class ArticleReference implements Reference {
 
+	private static final long serialVersionUID = -1611581656126724827L;
+	
 	public final static String PATH = "/article/{id}";
 	private final String id;
 

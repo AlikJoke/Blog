@@ -26,6 +26,8 @@ import ru.myblog.project.web.utils.ResourceLink;
 @JsonInclude(Include.NON_DEFAULT)
 public class AttachmentResource extends Resource {
 
+	private static final long serialVersionUID = 3298451764764471150L;
+	
 	public String attachmentName;
 	public Long size;
 	public String type;

@@ -4,6 +4,7 @@ import ru.myblog.project.entities.mongo.SubMongoEntity;
 
 /**
  * Интерфейс для работы с сущностями MongoDB.
+ * Реализация: {@linkplain EntityMongoDaoImpl}
  * 
  * @author Alimurad A. Ramazanov
  * @since 31.12.2016

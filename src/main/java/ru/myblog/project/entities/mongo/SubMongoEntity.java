@@ -5,7 +5,6 @@ import java.io.File;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
 @Document(collection = "files")
 public class SubMongoEntity {
 
@@ -15,7 +14,6 @@ public class SubMongoEntity {
 	private String fileName;
 
 	public SubMongoEntity() {
-
 	}
 
 	public SubMongoEntity(String id, Long size, String fileName, File file) {

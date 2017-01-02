@@ -19,6 +19,13 @@ import ru.myblog.project.entities.SubObject;
 import ru.myblog.project.entities.configuration.Storage;
 import ru.myblog.project.entities.mongo.SubMongoEntity;
 
+/**
+ * Реализация интерфейса {@link EntityDao}
+ * 
+ * @author Alimurad A. Ramazanov
+ * @since 31.12.2016
+ *
+ */
 @Repository
 public class EntityDaoImpl implements EntityDao {
 

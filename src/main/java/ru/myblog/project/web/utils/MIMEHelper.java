@@ -2,6 +2,15 @@ package ru.myblog.project.web.utils;
 
 import com.google.common.net.MediaType;
 
+/**
+ * Класс-helper для работы с content-type приложений. P.S. Не красивая простыня
+ * if-else if.
+ * 
+ * @author Alimurad A. Ramazanov
+ * @version 1.0
+ * @since 02.01.2017
+ *
+ */
 public class MIMEHelper {
 
 	public static final String CONTENT_TYPE = "Content-Type";

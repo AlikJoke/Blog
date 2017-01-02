@@ -17,9 +17,11 @@ import ru.myblog.project.web.utils.UriHelper;
 @EnableSpringConfigured
 public class AttachmentReference implements Reference {
 
+	private static final long serialVersionUID = -3339423954405790845L;
+
 	public final static String PATH = "/attachment/{id}";
 	private final String id;
-	
+
 	@Override
 	public String getHref() {
 		String id = this.id;
@@ -28,7 +30,7 @@ public class AttachmentReference implements Reference {
 		UriComponents uriComponents = UriComponentsBuilder.fromPath(PATH).build();
 		return uriComponents.expand(id).encode().toString();
 	}
-	
+
 	public AttachmentReference(URI uri) {
 		UriHelper helper = new UriHelper(uri, PATH);
 		this.id = helper.getPathVariable("id");

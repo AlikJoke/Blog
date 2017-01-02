@@ -4,14 +4,17 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import ru.myblog.project.entities.Article;
+import ru.myblog.project.entities.SubObject;
 import ru.myblog.project.web.resources.Resource;
 
 /**
  * Интерфейс для слоя REST для работы с сущностями DAO.
+ * Реализация: {@linkplain RestOperationsImpl}.
  * 
  * @author Alimurad A. Ramazanov
  * @since 31.12.2016
- * @version 1.0
+ * @version 1.1
  */
 public interface RestOperations {
 
@@ -65,11 +68,21 @@ public interface RestOperations {
 	 * <p>
 	 * 
 	 * @see {@link Resource}
-	 * @param id идентификатор.
-	 * @param clazz - класс сущности.
+	 * @param id
+	 *            идентификатор.
+	 * @param clazz
+	 *            - класс сущности.
 	 * @return REST-ресурс сущности.
 	 */
 	Resource get(@NotNull String id, @NotNull Class<?> clazz);
-	
+
+	/**
+	 * Операция получения всех сущностей доменного уровня типа
+	 * {@linkplain Article} в виде REST-ресурса.
+	 * <p>
+	 * 
+	 * @see {@link Resource}, {@link SubObject.Mapped}
+	 * @return не может быть {@code null}.
+	 */
 	List<Resource> findAll();
 }

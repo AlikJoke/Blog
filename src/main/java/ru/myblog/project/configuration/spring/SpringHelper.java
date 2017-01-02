@@ -1,14 +1,17 @@
 package ru.myblog.project.configuration.spring;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.web.context.support.XmlWebApplicationContext;
 
 public abstract class SpringHelper {
 
 	public static final String SCOPE_PROTOTYPE = "prototype";
 
+	@Resource
 	public static <X> X getBean(final String beanName, final Object... args) {
 
 		if (beanName == null)
@@ -16,7 +19,8 @@ public abstract class SpringHelper {
 		if (args == null)
 			throw new IllegalArgumentException("args must be not-null");
 
-		BeanFactory beanFactory = new ClassPathXmlApplicationContext().getBeanFactory();
+		@SuppressWarnings("resource")
+		BeanFactory beanFactory = new XmlWebApplicationContext().getBeanFactory();
 		try {
 
 			final Object beanO = (args.length == 0) ? beanFactory.getBean(beanName)
