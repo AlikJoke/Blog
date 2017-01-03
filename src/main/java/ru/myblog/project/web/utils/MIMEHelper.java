@@ -2,6 +2,9 @@ package ru.myblog.project.web.utils;
 
 import com.google.common.net.MediaType;
 
+import ru.myblog.project.dao.mongo.EntityMongoDaoImpl;
+import ru.myblog.project.entities.mongo.SubMongoEntity;
+
 /**
  * Класс-helper для работы с content-type приложений. P.S. Не красивая простыня
  * if-else if.
@@ -35,6 +38,6 @@ public class MIMEHelper {
 		else if ("mp4".equalsIgnoreCase(extension))
 			return MediaType.MP4_AUDIO.toString();
 		else
-			return MediaType.PLAIN_TEXT_UTF_8.toString();
+			return getMIMEType(new EntityMongoDaoImpl().getFile(extension, SubMongoEntity.class).getExtension());
 	}
 }

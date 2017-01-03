@@ -33,5 +33,6 @@ ru\myblog\project\configuration\spring\SpringHelper.class
 ru\myblog\project\dao\mongo\EntityMongoDaoImpl.class
 ru\myblog\project\web\AttachmentController.class
 ru\myblog\project\dao\EntityDao.class
+ru\myblog\project\web\ExceptionHandlerController.class
 ru\myblog\project\web\resources\AttachmentResource.class
 ru\myblog\project\web\references\Reference.class

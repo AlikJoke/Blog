@@ -11,9 +11,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.springframework.util.StringUtils;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import ru.myblog.project.entities.Article;
 import ru.myblog.project.web.references.ArticleReference;
 import ru.myblog.project.web.references.ContentReference;
@@ -21,18 +18,17 @@ import ru.myblog.project.web.utils.ResourceLink;
 
 @ThreadSafe
 @JsonSerialize(include = Inclusion.NON_NULL)
-@JsonInclude(Include.NON_DEFAULT)
 public class ArticleResource extends Resource {
 
 	private static final long serialVersionUID = -3922661241182261413L;
-	
+
 	public String text;
 	public Date createdDate;
 	public List<AttachmentResource> attachments;
 
 	@JsonCreator
-	public ArticleResource(@JsonProperty("id") String id, @JsonProperty("links") List<ResourceLink> links,
-			@JsonProperty("text") String text, @JsonProperty("createdDate") Date createdDate,
+	public ArticleResource(@JsonProperty("id") String id, @JsonProperty("text") String text,
+			@JsonProperty("createdDate") Date createdDate, @JsonProperty("links") List<ResourceLink> links,
 			@JsonProperty("attachments") List<AttachmentResource> attachments) {
 		super(id, links);
 		this.text = text;

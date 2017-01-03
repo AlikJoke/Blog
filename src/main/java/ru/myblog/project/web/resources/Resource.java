@@ -8,15 +8,13 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.http.annotation.ThreadSafe;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.StringUtils;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.myblog.project.entities.Article;
 import ru.myblog.project.entities.Attachment;
@@ -29,7 +27,6 @@ import ru.myblog.project.web.utils.ResourceLink;
 @Configurable
 @ThreadSafe
 @JsonSerialize(include = Inclusion.NON_NULL)
-@JsonInclude(Include.NON_DEFAULT)
 public class Resource implements Serializable {
 
 	private static final long serialVersionUID = 8193511648494865658L;
@@ -47,7 +44,7 @@ public class Resource implements Serializable {
 				entity.setText(((ArticleResource) resource).text);
 				entity.setID(resource.id);
 				entity.setAttachments(((ArticleResource) resource).attachments.stream()
-						.map(attResource -> attResource.getAttachmentFromResource()).collect(Collectors.toSet()));
+						.map(attResource -> attResource.attachmentFromResource()).collect(Collectors.toSet()));
 				return entity;
 			} else if (resource instanceof AttachmentResource) {
 				AttachmentResource attachmentResource = (AttachmentResource) resource;
@@ -67,7 +64,8 @@ public class Resource implements Serializable {
 							+ hash.split("@")[1].substring(hash.split("@")[1].indexOf("$") + 1));
 					if (!file.exists())
 						throw new IllegalArgumentException("Can't find file");
-					mongoEntity = new SubMongoEntity(resource.id, file.length(), hash, file);
+					mongoEntity = new SubMongoEntity(resource.id, file.length(), hash, file,
+							FilenameUtils.getExtension(file.getName()));
 					entity.setFile(mongoEntity);
 				}
 				return entity;

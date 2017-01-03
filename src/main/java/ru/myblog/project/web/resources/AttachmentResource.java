@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.http.annotation.ThreadSafe;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -11,9 +12,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.springframework.util.StringUtils;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.myblog.project.entities.Attachment;
 import ru.myblog.project.entities.mongo.SubMongoEntity;
@@ -23,11 +21,10 @@ import ru.myblog.project.web.utils.ResourceLink;
 
 @ThreadSafe
 @JsonSerialize(include = Inclusion.NON_NULL)
-@JsonInclude(Include.NON_DEFAULT)
 public class AttachmentResource extends Resource {
 
 	private static final long serialVersionUID = 3298451764764471150L;
-	
+
 	public String attachmentName;
 	public Long size;
 	public String type;
@@ -44,9 +41,9 @@ public class AttachmentResource extends Resource {
 	}
 
 	@JsonCreator
-	public AttachmentResource(@JsonProperty("id") String id, @JsonProperty("links") List<ResourceLink> links,
-			@JsonProperty("attachmentName") String attachmentName, @JsonProperty("size") Long size,
-			@JsonProperty("type") String type, @JsonProperty("contentURL") String contentURL) {
+	public AttachmentResource(@JsonProperty("id") String id, @JsonProperty("attachmentName") String attachmentName,
+			@JsonProperty("size") Long size, @JsonProperty("type") String type,
+			@JsonProperty("contentURL") String contentURL, @JsonProperty("links") List<ResourceLink> links) {
 		super(id, links);
 		this.attachmentName = attachmentName;
 		this.size = size;
@@ -58,17 +55,17 @@ public class AttachmentResource extends Resource {
 		super();
 		this.attachmentName = null;
 		this.contentURL = null;
-		this.size = null;
+		this.size = new Long(0);
 		this.type = null;
 	}
 
 	void addLinks(Attachment entity) {
-		this.links.add(new ResourceLink("self", new AttachmentReference(entity).getHref()));
+		this.links.add(new ResourceLink(new AttachmentReference(entity)));
 		this.links.add(new ResourceLink("save", new AttachmentReference(entity).getHref()));
 	}
 
 	@JsonIgnore
-	public Attachment getAttachmentFromResource() {
+	public Attachment attachmentFromResource() {
 		Attachment attachment = new Attachment();
 		attachment.setID(this.id);
 		attachment.setAttachmentName(this.attachmentName);
@@ -80,8 +77,8 @@ public class AttachmentResource extends Resource {
 			if (!file.exists())
 				throw new IllegalArgumentException("Can't find file");
 			attachment.setSize(file.length());
-			attachment.setFile(
-					new SubMongoEntity(this.id, file.length(), hash.substring(hash.lastIndexOf("$") + 1), file));
+			attachment.setFile(new SubMongoEntity(this.id, file.length(), hash.substring(hash.lastIndexOf("$") + 1),
+					file, FilenameUtils.getExtension(file.getName())));
 
 		}
 		return attachment;

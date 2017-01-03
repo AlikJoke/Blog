@@ -26,11 +26,12 @@ public class MongoDBConfig extends AbstractMongoConfiguration {
 
 	@Override
 	public String getDatabaseName() {
-		return "file_storage";
+		return "mongodb";
 	}
 
 	@Override
+	@Bean
 	public Mongo mongo() throws Exception {
-		return new MongoClient("127.0.0.1");
+		return new MongoClient("127.0.0.1:27017");
 	}
 }

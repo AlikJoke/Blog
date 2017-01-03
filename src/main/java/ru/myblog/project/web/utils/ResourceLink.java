@@ -11,14 +11,10 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import ru.myblog.project.web.references.Reference;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = Inclusion.NON_NULL)
-@JsonInclude(Include.NON_DEFAULT)
 public class ResourceLink implements Serializable {
 
 	private static final long serialVersionUID = -8366737731655354734L;
@@ -34,13 +30,7 @@ public class ResourceLink implements Serializable {
 	public String getHref() {
 		return this.href;
 	}
-
-	private final String title;
-
-	public String getTitle() {
-		return this.title;
-	}
-
+	
 	@JsonIgnore
 	public URI getUri() {
 		try {
@@ -53,10 +43,6 @@ public class ResourceLink implements Serializable {
 		}
 	}
 
-	public ResourceLink(String rel, String href) {
-		this(rel, ServletConfig.getServerRootUrl() + href, null);
-	}
-
 	public ResourceLink(Reference ref) {
 		this("self", ref.getHref());
 	}
@@ -65,17 +51,11 @@ public class ResourceLink implements Serializable {
 		this(rel, reference.getHref());
 	}
 
-	public ResourceLink(String rel, Reference reference, String title) {
-		this(rel, reference.getHref(), title);
-	}
-
 	@JsonCreator
-	public ResourceLink(@JsonProperty("rel") String rel, @JsonProperty("href") String href,
-			@JsonProperty("title") String title) {
+	public ResourceLink(@JsonProperty("rel") String rel, @JsonProperty("href") String href) {
 		super();
 		this.rel = rel;
-		this.href = href;
-		this.title = title;
+		this.href = ServletConfig.getServerRootUrl() + href;
 	}
 
 	public static String rel(String relation) {
@@ -95,8 +75,6 @@ public class ResourceLink implements Serializable {
 			return false;
 		if (rel != null ? !rel.equals(that.rel) : that.rel != null)
 			return false;
-		if (title != null ? !title.equals(that.title) : that.title != null)
-			return false;
 
 		return true;
 	}
@@ -105,7 +83,6 @@ public class ResourceLink implements Serializable {
 	public int hashCode() {
 		int result = rel != null ? rel.hashCode() : 0;
 		result = 31 * result + href.hashCode();
-		result = 31 * result + (title != null ? title.hashCode() : 0);
 		return result;
 	}
 

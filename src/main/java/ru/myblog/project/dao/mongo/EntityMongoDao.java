@@ -46,5 +46,5 @@ public interface EntityMongoDao {
 	 *            - класс сущности.
 	 * @return файл, может быть {@code null}.
 	 */
-	<T> T getFile(String id, Class<?> clazz);
+	SubMongoEntity getFile(String id, Class<?> clazz);
 }

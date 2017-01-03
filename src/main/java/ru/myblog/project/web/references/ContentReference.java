@@ -16,6 +16,7 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import ru.myblog.project.entities.Attachment;
+import ru.myblog.project.web.utils.ServletConfig;
 import ru.myblog.project.web.utils.UriHelper;
 
 @Component("contentReference")
@@ -32,7 +33,7 @@ public class ContentReference implements Reference {
 	public String getHref() {
 		if (!StringUtils.hasLength(this.hash))
 			return null;
-		UriComponents uriComponents = UriComponentsBuilder.fromPath(PATH).build();
+		UriComponents uriComponents = UriComponentsBuilder.fromPath(ServletConfig.getServerRootUrl() + PATH).build();
 		return uriComponents.expand(this.hash).toString();
 	}
 
@@ -43,9 +44,9 @@ public class ContentReference implements Reference {
 
 	public ContentReference(Attachment attachment) {
 		if (!StringUtils.hasLength(attachment.getID()))
-			this.hash = "{hash}";
+			this.hash = "_hash_";
 		else
-			this.hash = attachment.getFile().getFileName();
+			this.hash = attachment.getID();
 	}
 
 	public ContentReference() {
@@ -82,12 +83,17 @@ public class ContentReference implements Reference {
 			throw new RuntimeException("Hash can't be null");
 
 		try {
-			File dir = new File(tempDirectory());
-			// Black magic
-			File serverFile = new File(dir.getAbsolutePath() + "//" + hash + "."
-					+ hash.split("@")[1].substring(hash.split("@")[1].indexOf("$") + 1));
-			if (!serverFile.exists())
-				throw new RuntimeException("File with requested hash doesn't exist");
+			File dir = new File(System.getProperty("java.io.tmpdir"));
+			// Case I: when file already save in mongodb
+			File serverFile = new File(dir.getAbsolutePath() + "//" + hash);
+			if (!serverFile.exists()) {
+				// Case II: linked attachment entity isn't save
+				dir = new File(tempDirectory());
+				serverFile = new File(dir.getAbsolutePath() + "//" + hash + "."
+						+ hash.split("@")[1].substring(hash.split("@")[1].indexOf("$") + 1));
+				if (!serverFile.exists())
+					throw new RuntimeException("File with requested hash doesn't exist");
+			}
 			return serverFile;
 		} catch (Exception e) {
 			throw new RuntimeException("Exception while get uploaded file with hash " + hash + " => " + e.getMessage());

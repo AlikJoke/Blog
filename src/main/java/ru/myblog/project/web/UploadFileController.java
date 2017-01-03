@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,17 +40,19 @@ public class UploadFileController extends ExceptionHandlerController {
 			HttpServletResponse response) throws IOException {
 		File file = ref.getUploadedFile(hash);
 		HttpHeaders headers = new HttpHeaders();
-		headers.add(MIMEHelper.CONTENT_TYPE, MIMEHelper.getMIMEType(FilenameUtils.getExtension(file.getName())));
+		headers.add(MIMEHelper.CONTENT_TYPE,
+				MIMEHelper.getMIMEType(StringUtils.hasLength(FilenameUtils.getExtension(file.getName()))
+						? FilenameUtils.getExtension(file.getName()) : file.getName()));
 		return new ResponseEntity<InputStreamResource>(new InputStreamResource(new FileInputStream(file)), headers,
 				HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = ContentReference.PATH, method = RequestMethod.OPTIONS)
 	@ResponseStatus(HttpStatus.ACCEPTED)
 	public void doOptions(HttpServletRequest request, HttpServletResponse response) {
 		super.doOptions(request, response);
 	}
-	
+
 	@RequestMapping(value = "/uploadFile", method = RequestMethod.OPTIONS)
 	@ResponseStatus(HttpStatus.ACCEPTED)
 	public void doOptionsUpload(HttpServletRequest request, HttpServletResponse response) {

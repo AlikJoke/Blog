@@ -1,6 +1,5 @@
 package ru.myblog.project.test.attachment;
 
-import java.util.Calendar;
 import java.util.UUID;
 
 import org.junit.After;
@@ -12,7 +11,6 @@ import org.mockito.MockitoAnnotations.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import ru.myblog.project.dao.EntityDao;
-import ru.myblog.project.entities.Article;
 import ru.myblog.project.entities.Attachment;
 
 @RunWith(MockitoJUnitRunner.class)
